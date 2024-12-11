@@ -1,0 +1,54 @@
+import java.time.LocalDate;
+import java.io.*;
+import java.util.ArrayList;
+
+public class Main {
+    public static void main(String[] args) {
+        // Create User
+        User user = new User("JohnDoe", "johndoe@example.com");
+        System.out.println("User created: " + user.getUsername() + " (" + user.getEmail() + ")");
+
+        // Create HabitService
+        HabitService habitService = new HabitService();
+
+        // Add habits
+        Habit habit1 = new Habit("Exercise", "Daily morning workout", LocalDate.of(2024, 1, 1), 30);
+        Habit habit2 = new Habit("Reading", "Read at least 20 pages", LocalDate.of(2024, 1, 5), 20);
+
+        habitService.addHabit(habit1);
+        habitService.addHabit(habit2);
+        System.out.println("Habits added:");
+        habitService.getAllHabits().forEach(habit -> System.out.println("- " + habit.getName() + ": " + habit.getDescription()));
+
+        // Track progress for Exercise
+        Progress progress = new Progress();
+        progress.markProgress(LocalDate.of(2024, 1, 1), true);
+        progress.markProgress(LocalDate.of(2024, 1, 2), false);
+        progress.markProgress(LocalDate.of(2024, 1, 3), true);
+        System.out.println("Progress for 'Exercise':");
+        System.out.println("Completion Rate: " + progress.getCompletionRate() + "%");
+        
+        // Save habits to file
+        String filename = "habits.dat";
+        try {
+            FileHandler.saveData(filename, habitService.getAllHabits());
+            System.out.println("Habits saved to file: " + filename);
+        } catch (IOException e) {
+            System.err.println("Error saving habits: " + e.getMessage());
+        }
+
+        // Load habits from file
+        try {
+            ArrayList<Habit> loadedHabits = FileHandler.loadData(filename);
+            System.out.println("Habits loaded from file:");
+            loadedHabits.forEach(habit -> System.out.println("- " + habit.getName() + ": " + habit.getDescription()));
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println("Error loading habits: " + e.getMessage());
+        }
+
+        // Remove a habit
+        habitService.removeHabit("Reading");
+        System.out.println("Remaining habits after removal:");
+        habitService.getAllHabits().forEach(habit -> System.out.println("- " + habit.getName()));
+    }
+}

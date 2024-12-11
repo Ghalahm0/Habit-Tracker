@@ -1,0 +1,34 @@
+import java.util.ArrayList;
+
+public class HabitService 
+{
+    private ArrayList<Habit> habits;
+
+    public HabitService() 
+    {
+        this.habits = new ArrayList<>();
+    }
+
+    public void addHabit(Habit habit) 
+    {
+        habits.add(habit);
+    }
+
+    public void removeHabit(String habitName) 
+    {
+        habits.removeIf(habit -> habit.getName().equals(habitName));
+    }
+
+    public Habit getHabit(String habitName) 
+    {
+        return habits.stream()
+            .filter(habit -> habit.getName().equals(habitName))
+            .findFirst()
+            .orElse(null);
+    }
+
+    public ArrayList<Habit> getAllHabits() 
+    {
+        return habits;
+    }
+}
